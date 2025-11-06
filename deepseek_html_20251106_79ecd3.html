@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 22 Flashcards - 32 Questions</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            height: 95vh;
+            max-height: 95vh;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100" opacity="0.1"><path d="M30,30 Q50,10 70,30 T90,50 T70,70 T50,90 T30,70 T10,50 T30,30 Z" fill="white"/></svg>');
+        }
+        
+        .header h1 {
+            font-size: clamp(1.3rem, 4vw, 1.8rem);
+            margin-bottom: 8px;
+            position: relative;
+        }
+        
+        .header .subtitle {
+            font-size: clamp(0.8rem, 2.5vw, 1rem);
+            opacity: 0.9;
+            position: relative;
+        }
+        
+        .progress {
+            background: #34495e;
+            height: 8px;
+            width: 100%;
+            flex-shrink: 0;
+        }
+        
+        .progress-bar {
+            background: linear-gradient(90deg, #3498db, #2ecc71);
+            height: 100%;
+            width: 0%;
+            transition: width 0.4s ease;
+            border-radius: 0 4px 4px 0;
+        }
+        
+        .flashcard {
+            padding: clamp(10px, 3vw, 20px);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #f8f9fa;
+            overflow-y: auto;
+        }
+        
+        .question-container {
+            display: flex;
+            gap: clamp(10px, 2vw, 15px);
+            align-items: flex-start;
+            margin-bottom: clamp(10px, 2vw, 15px);
+        }
+        
+        .question-icon {
+            background: #3498db;
+            color: white;
+            width: clamp(35px, 8vw, 50px);
+            height: clamp(35px, 8vw, 50px);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(1rem, 3vw, 1.2rem);
+            font-weight: bold;
+            flex-shrink: 0;
+            box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+        }
+        
+        .question {
+            font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+            line-height: 1.6;
+            color: #2c3e50;
+            flex-grow: 1;
+            font-weight: 500;
+        }
+        
+        .image-container {
+            margin: clamp(8px, 2vw, 15px) 0;
+            text-align: center;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+            max-height: clamp(120px, 20vh, 180px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #ecf0f1;
+        }
+        
+        .concept-image {
+            max-width: 100%;
+            max-height: clamp(110px, 18vh, 160px);
+            border-radius: 8px;
+            object-fit: cover;
+        }
+        
+        .hint-container {
+            margin: clamp(8px, 2vw, 15px) 0;
+            text-align: center;
+        }
+        
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: clamp(6px, 1.5vw, 10px);
+            margin-bottom: clamp(10px, 2vw, 20px);
+            flex: 1;
+        }
+        
+        .option {
+            padding: clamp(10px, 2vw, 14px) clamp(12px, 2.5vw, 18px);
+            border: 2px solid #bdc3c7;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+            display: flex;
+            align-items: center;
+            gap: clamp(8px, 1.5vw, 10px);
+            font-size: clamp(0.85rem, 2vw, 1rem);
+        }
+        
+        .option:hover {
+            background: #e9ecef;
+            border-color: #95a5a6;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .option-letter {
+            background: #ecf0f1;
+            color: #2c3e50;
+            width: clamp(24px, 5vw, 28px);
+            height: clamp(24px, 5vw, 28px);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+            font-size: clamp(0.75rem, 1.8vw, 0.9rem);
+        }
+        
+        .option.correct {
+            background: #d4edda;
+            border-color: #28a745;
+            color: #155724;
+        }
+        
+        .option.correct .option-letter {
+            background: #28a745;
+            color: white;
+        }
+        
+        .option.incorrect {
+            background: #f8d7da;
+            border-color: #dc3545;
+            color: #721c24;
+        }
+        
+        .option.incorrect .option-letter {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .feedback {
+            padding: clamp(12px, 2.5vw, 16px);
+            border-radius: 12px;
+            margin-bottom: clamp(10px, 2vw, 16px);
+            display: none;
+            align-items: center;
+            gap: clamp(8px, 1.5vw, 12px);
+            font-weight: 500;
+            font-size: clamp(0.85rem, 2vw, 1rem);
+        }
+        
+        .feedback.correct {
+            background: #d4edda;
+            border: 2px solid #28a745;
+            color: #155724;
+            display: flex;
+        }
+        
+        .feedback.incorrect {
+            background: #f8d7da;
+            border: 2px solid #dc3545;
+            color: #721c24;
+            display: flex;
+        }
+        
+        .feedback-icon {
+            font-size: clamp(1.2rem, 3vw, 1.4rem);
+            flex-shrink: 0;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: clamp(12px, 2.5vw, 16px) clamp(16px, 3vw, 24px);
+            background: #ecf0f1;
+            border-top: 1px solid #bdc3c7;
+            flex-shrink: 0;
+        }
+        
+        .counter {
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: clamp(0.85rem, 2vw, 1rem);
+        }
+        
+        .btn {
+            padding: clamp(10px, 2vw, 12px) clamp(15px, 2.5vw, 20px);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: clamp(6px, 1vw, 8px);
+            font-size: clamp(0.8rem, 1.8vw, 0.9rem);
+            white-space: nowrap;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(52, 152, 219, 0.3);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(149, 165, 166, 0.3);
+        }
+        
+        .btn-hint {
+            background: linear-gradient(135deg, #ffc107, #ff9800);
+            color: white;
+            padding: clamp(8px, 1.5vw, 10px) clamp(12px, 2vw, 16px);
+            font-size: clamp(0.75rem, 1.6vw, 0.85rem);
+        }
+        
+        .btn-hint:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(255, 193, 7, 0.3);
+        }
+        
+        .btn:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .rationale {
+            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+            border: 2px solid #ffd43b;
+            border-radius: 12px;
+            padding: clamp(12px, 2.5vw, 16px);
+            margin-top: clamp(8px, 1.5vw, 12px);
+            display: none;
+        }
+        
+        .rationale.show {
+            display: block;
+            animation: slideIn 0.5s ease;
+        }
+        
+        .rationale h4 {
+            color: #856404;
+            margin-bottom: clamp(6px, 1.2vw, 10px);
+            display: flex;
+            align-items: center;
+            gap: clamp(6px, 1.2vw, 8px);
+            font-size: clamp(0.9rem, 2.2vw, 1.1rem);
+        }
+        
+        .rationale p {
+            color: #856404;
+            line-height: 1.6;
+            font-size: clamp(0.8rem, 1.8vw, 0.95rem);
+        }
+        
+        .hint {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            border: 2px dashed #2196f3;
+            border-radius: 12px;
+            padding: clamp(12px, 2.5vw, 16px);
+            margin-top: clamp(6px, 1.2vw, 10px);
+            display: none;
+            animation: slideIn 0.5s ease;
+        }
+        
+        .hint.show {
+            display: block;
+        }
+        
+        .hint h4 {
+            color: #1565c0;
+            margin-bottom: clamp(6px, 1.2vw, 8px);
+            display: flex;
+            align-items: center;
+            gap: clamp(5px, 1vw, 6px);
+            font-size: clamp(0.85rem, 2vw, 1rem);
+        }
+        
+        .hint p {
+            color: #1565c0;
+            line-height: 1.5;
+            font-size: clamp(0.75rem, 1.6vw, 0.9rem);
+            font-style: italic;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .stats {
+            display: flex;
+            gap: clamp(8px, 1.5vw, 15px);
+            justify-content: center;
+            margin-top: clamp(4px, 1vw, 10px);
+            flex-wrap: wrap;
+        }
+        
+        .stat {
+            background: rgba(255,255,255,0.2);
+            padding: clamp(5px, 1vw, 6px) clamp(8px, 1.8vw, 12px);
+            border-radius: 20px;
+            font-size: clamp(0.7rem, 1.6vw, 0.85rem);
+            white-space: nowrap;
+        }
+        
+        /* Cancel selection button */
+        .cancel-selection {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+            color: white;
+            margin: 0 auto clamp(10px, 2vw, 15px) auto;
+            display: none;
+        }
+        
+        .cancel-selection:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(255, 107, 107, 0.3);
+        }
+        
+        .cancel-selection.show {
+            display: flex;
+        }
+        
+        /* Mobile-specific adjustments */
+        @media (max-width: 768px) {
+            body {
+                padding: 5px;
+            }
+            
+            .container {
+                height: 100vh;
+                max-height: 100vh;
+                border-radius: 15px;
+            }
+            
+            .question-container {
+                flex-direction: column;
+                text-align: center;
+                gap: 8px;
+            }
+            
+            .question-icon {
+                align-self: center;
+            }
+            
+            .navigation {
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+            
+            .btn {
+                padding: 10px 16px;
+                flex: 1;
+                justify-content: center;
+                min-width: 120px;
+            }
+            
+            .counter {
+                order: -1;
+                width: 100%;
+                text-align: center;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .flashcard {
+                padding: 8px;
+            }
+            
+            .navigation {
+                padding: 10px 12px;
+            }
+            
+            .btn {
+                padding: 8px 12px;
+                font-size: 0.8rem;
+                min-width: 100px;
+            }
+            
+            .options {
+                gap: 5px;
+            }
+            
+            .option {
+                padding: 8px 10px;
+            }
+        }
+        
+        /* Very small screens */
+        @media (max-width: 320px) {
+            .header h1 {
+                font-size: 1.1rem;
+            }
+            
+            .header .subtitle {
+                font-size: 0.75rem;
+            }
+            
+            .btn {
+                padding: 6px 10px;
+                font-size: 0.75rem;
+                min-width: 80px;
+            }
+        }
+        
+        /* Large screens optimization */
+        @media (min-width: 1400px) {
+            .container {
+                max-height: 1000px;
+            }
+            
+            .flashcard {
+                padding: 25px;
+            }
+        }
+        
+        /* Tall screens */
+        @media (min-height: 1000px) {
+            .flashcard {
+                padding: 25px;
+            }
+            
+            .question {
+                font-size: 1.2rem;
+            }
+            
+            .option {
+                font-size: 1.1rem;
+            }
+        }
+        
+        /* Short screens */
+        @media (max-height: 600px) {
+            .header {
+                padding: 10px;
+            }
+            
+            .flashcard {
+                padding: 8px;
+            }
+            
+            .question-icon {
+                width: 35px;
+                height: 35px;
+                font-size: 1rem;
+            }
+            
+            .question {
+                font-size: 0.9rem;
+            }
+            
+            .image-container {
+                max-height: 100px;
+            }
+            
+            .concept-image {
+                max-height: 90px;
+            }
+            
+            .options {
+                gap: 5px;
+            }
+            
+            .option {
+                padding: 6px 8px;
+                font-size: 0.8rem;
+            }
+            
+            .option-letter {
+                width: 20px;
+                height: 20px;
+                font-size: 0.7rem;
+            }
+            
+            .navigation {
+                padding: 8px 10px;
+            }
+            
+            .btn {
+                padding: 6px 10px;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 Chapter 22 Flashcards</h1>
+            <div class="subtitle">Nursing Management of the Postpartum Woman at Risk - 32 Questions</div>
+            <div class="stats">
+                <div class="stat">🎯 32 Questions</div>
+                <div class="stat">💡 Hint Feature</div>
+                <div class="stat">📖 Visual Learning</div>
+                <div class="stat">↩️ Cancel Wrong Answers</div>
+            </div>
+        </div>
+        <div class="progress">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        
+        <div class="flashcard">
+            <div class="question-container">
+                <div class="question-icon">?</div>
+                <div class="question" id="question"></div>
+            </div>
+            <div class="image-container" id="imageContainer">
+                <img class="concept-image" id="conceptImage" alt="Educational illustration">
+            </div>
+            
+            <div class="hint-container">
+                <button class="btn btn-hint" id="hintBtn" onclick="showHint()">
+                    💡 Show Hint
+                </button>
+                <div class="hint" id="hint">
+                    <h4>💡 Study Tip:</h4>
+                    <p id="hintText"></p>
+                </div>
+            </div>
+            
+            <div class="options" id="options"></div>
+            
+            <!-- Cancel Selection Button - Only shows for wrong answers -->
+            <button class="btn cancel-selection" id="cancelBtn" onclick="cancelSelection()">
+                ↩️ Cancel Selection
+            </button>
+            
+            <div class="feedback" id="feedback">
+                <div class="feedback-icon" id="feedbackIcon"></div>
+                <div id="feedbackText"></div>
+            </div>
+            <div class="rationale" id="rationale">
+                <h4>💡 Rationale:</h4>
+                <p id="rationaleText"></p>
+            </div>
+        </div>
+        
+        <div class="navigation">
+            <button class="btn btn-secondary" id="prevBtn" onclick="previousCard()">
+                ⬅️ Previous
+            </button>
+            <div class="counter" id="counter">1/32</div>
+            <button class="btn btn-primary" id="nextBtn" onclick="nextCard()">
+                Next ➡️
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const medicalImages = {
+            'thrombophlebitis': 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=200&fit=crop',
+            'postpartum_mood': 'https://images.unsplash.com/photo-1599669454699-248893623440?w=400&h=200&fit=crop',
+            'mastitis': 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=200&fit=crop',
+            'postpartum_hemorrhage': 'https://images.unsplash.com/photo-1584467735871-8db9ac8e5e3a?w=400&h=200&fit=crop',
+            'pulmonary_embolism': 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=200&fit=crop',
+            'postpartum_infection': 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&h=200&fit=crop',
+            'fundal_massage': 'https://images.unsplash.com/photo-1584467735871-8db9ac8e5e3a?w=400&h=200&fit=crop',
+            'postpartum_psychosis': 'https://images.unsplash.com/photo-1599669454699-248893623440?w=400&h=200&fit=crop',
+            'uterine_atony': 'https://images.unsplash.com/photo-1584467735871-8db9ac8e5e3a?w=400&h=200&fit=crop',
+            'endometritis': 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&h=200&fit=crop',
+            'staphylococcus': 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&h=200&fit=crop',
+            'subinvolution': 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=200&fit=crop',
+            'hematoma': 'https://images.unsplash.com/photo-1584467735871-8db9ac8e5e3a?w=400&h=200&fit=crop',
+            'oxytocin_administration': 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&h=200&fit=crop',
+            'shock_signs': 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=200&fit=crop',
+            'risk_factors': 'https://images.unsplash.com/photo-1584467735871-8db9ac8e5e3a?w=400&h=200&fit=crop',
+            'fundal_support': 'https://images.unsplash.com/photo-1584467735871-8db9ac8e5e3a?w=400&h=200&fit=crop',
+            'early_ambulation': 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=200&fit=crop',
+            'anticoagulant_teaching': 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&h=200&fit=crop',
+            'infection_prevention': 'https://images.unsplash.com/photo-1583947215259-38e31be8751f?w=400&h=200&fit=crop',
+            'postpartum_depression': 'https://images.unsplash.com/photo-1599669454699-248893623440?w=400&h=200&fit=crop',
+            'depression_timing': 'https://images.unsplash.com/photo-1599669454699-248893623440?w=400&h=200&fit=crop',
+            'disseminated_intravascular': 'https://images.unsplash.com/photo-1584467735871-8db9ac8e5e3a?w=400&h=200&fit=crop',
+            'delusional_beliefs': 'https://images.unsplash.com/photo-1599669454699-248893623440?w=400&h=200&fit=crop',
+            'perineal_hematoma': 'https://images.unsplash.com/photo-1584467735871-8db9ac8e5e3a?w=400&h=200&fit=crop',
+            'uterotonic_agents': 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&h=200&fit=crop'
+        };
+
+        const questions = [
+            {
+                question: "Review of a primiparous woman's labor and birth record reveals a prolonged second stage of labor and extended time in the stirrups. Based on an interpretation of these findings, the nurse would be especially alert for which condition?",
+                options: [
+                    "retained placental fragments",
+                    "hypertension",
+                    "thrombophlebitis",
+                    "uterine subinvolution"
+                ],
+                correct: 2,
+                rationale: "The woman is at risk for thrombophlebitis due to the prolonged second stage of labor, necessitating an increased amount of time in bed, and venous pooling that occurs when the woman's legs are in stirrups for a long period of time. These findings are unrelated to retained placental fragments, which would lead to uterine subinvolution, or hypertension.",
+                image: 'thrombophlebitis',
+                hint: "Think about circulatory complications from prolonged immobility."
+            },
+            {
+                question: "The nurse is conducting a class for postpartum women about mood disorders. The nurse describes a transient, self-limiting mood disorder that affects mothers after birth. The nurse determines that the women understood the description when they identify the condition as postpartum:",
+                options: [
+                    "depression.",
+                    "psychosis.",
+                    "bipolar disorder.",
+                    "blues."
+                ],
+                correct: 3,
+                rationale: "Postpartum blues are manifested by mild depressive symptoms of anxiety, irritability, mood swings, tearfulness, increased sensitivity, feelings of being overwhelmed, and fatigue. They are usually self-limiting and require no formal treatment other than reassurance and validation of the woman's experience as well as assistance in caring for herself and her newborn. Postpartum depression is a major depressive episode associated with birth. Postpartum psychosis is at the severe end of the continuum of postpartum emotional disorders. Bipolar disorder refers to a mood disorder typically involving episodes of depression and mania.",
+                image: 'postpartum_mood',
+                hint: "This is a common, temporary emotional state after childbirth."
+            },
+            {
+                question: "A woman who is 2 weeks postpartum calls the clinic and says, \"My left breast hurts.\" After further assessment on the phone, the nurse suspects the woman has mastitis. In addition to pain, the nurse would question the woman about which symptom?",
+                options: [
+                    "an inverted nipple on the affected breast",
+                    "no breast milk in the affected breast",
+                    "an ecchymotic area on the affected breast",
+                    "hardening of an area in the affected breast"
+                ],
+                correct: 3,
+                rationale: "Mastitis is characterized by a tender, hot, red, painful area on the affected breast. An inverted nipple is not associated with mastitis. With mastitis, the breast is distended with milk, the area is inflamed (not ecchymotic), and there is breast tenderness.",
+                image: 'mastitis',
+                hint: "Look for localized inflammation and induration in the breast."
+            },
+            {
+                question: "A nurse is developing a program to help reduce the risk of late postpartum hemorrhage in clients in the labor and birth unit. Which measure would the nurse emphasize as part of this program?",
+                options: [
+                    "administering broad-spectrum antibiotics",
+                    "inspecting the placenta after delivery for intactness",
+                    "manually removing the placenta at birth",
+                    "applying pressure to the umbilical cord to remove the placenta"
+                ],
+                correct: 1,
+                rationale: "After the placenta is expelled, a thorough inspection is necessary to confirm its intactness because tears or fragments left inside may indicate an accessory lobe or placenta accreta. These can lead to profuse hemorrhage because the uterus is unable to contract fully. Administering antibiotics would be appropriate for preventing infection, not postpartum hemorrhage. Manual removal of the placenta or excessive traction on the umbilical cord can lead to uterine inversion, which in turn would result in hemorrhage.",
+                image: 'postpartum_hemorrhage',
+                hint: "Proper placental inspection can prevent retained tissue complications."
+            },
+            {
+                question: "A multipara client develops thrombophlebitis after birth. Which assessment findings would lead the nurse to intervene immediately?",
+                options: [
+                    "dyspnea, diaphoresis, hypotension, and chest pain",
+                    "dyspnea, bradycardia, hypertension, and confusion",
+                    "weakness, anorexia, change in level of consciousness, and coma",
+                    "pallor, tachycardia, seizures, and jaundice"
+                ],
+                correct: 0,
+                rationale: "Sudden unexplained shortness of breath and reports of chest pain along with diaphoresis and hypotension suggest pulmonary embolism, which requires immediate action. Other signs and symptoms include tachycardia, apprehension, hemoptysis, syncope, and sudden change in the woman's mental status secondary to hypoxemia. Anorexia, seizures, and jaundice are unrelated to a pulmonary embolism.",
+                image: 'pulmonary_embolism',
+                hint: "These are classic signs of a life-threatening pulmonary embolism."
+            },
+            {
+                question: "A client experienced prolonged labor with prolonged premature rupture of membranes. The nurse would be alert for which condition in the mother and the newborn?",
+                options: [
+                    "infection",
+                    "hemorrhage",
+                    "trauma",
+                    "hypovolemia"
+                ],
+                correct: 0,
+                rationale: "Although hemorrhage, trauma, and hypovolemia may be problems, the prolonged labor with the prolonged premature rupture of membranes places the client at high risk for a postpartum infection. The rupture of membranes removes the barrier of amniotic fluid, so bacteria can ascend.",
+                image: 'postpartum_infection',
+                hint: "Prolonged rupture of membranes increases infection risk."
+            },
+            {
+                question: "When assessing the postpartum woman, the nurse uses indicators other than pulse rate and blood pressure for postpartum hemorrhage because:",
+                options: [
+                    "these measurements may not change until after the blood loss is large.",
+                    "the body's compensatory mechanisms activate and prevent any changes.",
+                    "they relate more to change in condition than to the amount of blood lost.",
+                    "maternal anxiety adversely affects these vital signs."
+                ],
+                correct: 0,
+                rationale: "The typical signs of hemorrhage do not appear in the postpartum woman until as much as 1,800 to 2,100 ml of blood has been lost. In addition, accurate determination of actual blood loss is difficult because of blood pooling inside the uterus and on perineal pads, mattresses, and the floor.",
+                image: 'postpartum_hemorrhage',
+                hint: "Vital signs may not reflect blood loss until significant hemorrhage occurs."
+            },
+            {
+                question: "A nurse is assessing a postpartum client. Which finding would the cause the nurse the greatest concern?",
+                options: [
+                    "leg pain on ambulation with mild ankle edema",
+                    "calf pain with dorsiflexion of the foot",
+                    "perineal pain with swelling along the episiotomy",
+                    "sharp, stabbing chest pain with shortness of breath"
+                ],
+                correct: 3,
+                rationale: "Sharp, stabbing chest pain with shortness of breath suggests pulmonary embolism, an emergency that requires immediate action. Leg pain on ambulation with mild edema suggests superficial venous thrombosis. Calf pain on dorsiflexion of the foot may indicate deep vein thrombosis or a strained muscle or contusion. Perineal pain with swelling along the episiotomy might be a normal finding or suggest an infection. Of the conditions, pulmonary embolism is the most urgent.",
+                image: 'pulmonary_embolism',
+                hint: "This finding suggests a life-threatening emergency."
+            },
+            {
+                question: "A woman who is experiencing postpartum hemorrhage is extremely apprehensive and diaphoretic. The woman's extremities are cool and her capillary refill time is increased. Based on this assessment, the nurse suspects that the client is experiencing approximately how much blood loss?",
+                options: [
+                    "20%",
+                    "30%",
+                    "40%",
+                    "60%"
+                ],
+                correct: 0,
+                rationale: "The client's assessment indicated mild shock, which is associated with a 20% blood loss. Moderate shock occurs with a blood loss of 30 to 40%. Severe shock is associated with a blood loss greater than 40%.",
+                image: 'shock_signs',
+                hint: "These are early signs of shock from blood loss."
+            },
+            {
+                question: "A postpartum client is prescribed medication therapy as part of the treatment plan for postpartum hemorrhage. Which medication would the nurse expect to administer in this situation?",
+                options: [
+                    "Magnesium sulfate",
+                    "methylergonovine",
+                    "Indomethacin",
+                    "nifedipine"
+                ],
+                correct: 1,
+                rationale: "Methylergonovine, along wiht oxytocin and carboprost are drugs used to manage postpartum hemorrhage. Magnesium sulfate, indomethecin, and nifedipine are used to control preterm labor.",
+                image: 'uterotonic_agents',
+                hint: "This medication helps the uterus contract to control bleeding."
+            },
+            {
+                question: "A client is experiencing postpartum hemorrhage, and the nurse begins to massage her fundus. Which action would be most appropriate for the nurse to do when massaging the woman's fundus?",
+                options: [
+                    "Place the hands on the sides of the abdomen to grasp the uterus.",
+                    "Use an up-and-down motion to massage the uterus.",
+                    "Wait until the uterus is firm to express clots.",
+                    "Continue massaging the uterus for at least 5 minutes."
+                ],
+                correct: 2,
+                rationale: "The uterus must be firm before attempts to express clots are made because application of firm pressure on an uncontracted uterus could lead to uterine inversion. One hand is placed on the fundus and the other hand is placed on the area above the symphysis pubis. Circular motions are used for massage. There is no specified amount of time for fundal massage. Uterine tissue responds quickly to touch, so it is important not to overmassage the fundus.",
+                image: 'fundal_massage',
+                hint: "Ensure the uterus is contracted before attempting to remove clots."
+            },
+            {
+                question: "After teaching a woman with a postpartum infection about care after discharge, which client statement indicates the need for additional teaching?",
+                options: [
+                    "\"I need to call my doctor if my temperature goes above 100.4° F (38° C).\"",
+                    "\"When I put on a new pad, I'll start at the back and go forward.\"",
+                    "\"If I have chills or my discharge has a strange odor, I'll call my doctor.\"",
+                    "\"I'll point the spray of the peri-bottle so it the water flows front to back.\""
+                ],
+                correct: 1,
+                rationale: "The woman needs additional teaching when she states that she should apply the perineal pad starting at the back and going forward. The pad should be applied using a front-to-back motion. Notifying the health care provider of a temperature above 100.4° F (38° C), aiming the peri-bottle spray so that the flow goes from front to back, and reporting danger signs such as chills or lochia with a strange odor indicate effective teaching.",
+                image: 'infection_prevention',
+                hint: "Proper hygiene technique prevents contamination from anal area."
+            },
+            {
+                question: "A nurse is making a home visit to a postpartum client. Which finding would lead the nurse to suspect that a woman is experiencing postpartum psychosis?",
+                options: [
+                    "delirium",
+                    "feelings of guilt",
+                    "sadness",
+                    "insomnia"
+                ],
+                correct: 0,
+                rationale: "Postpartum psychosis is at the severe end of the continuum of postpartum emotional disorders. It is manifested by depression that escalates to delirium, hallucinations, anger toward self and infant, bizarre behavior, mania, and thoughts of hurting herself and the infant. Feelings of guilt, sadness, and insomnia are associated with postpartum depression.",
+                image: 'postpartum_psychosis',
+                hint: "This represents the most severe form of postpartum mental illness."
+            },
+            {
+                question: "A nurse is reviewing a journal article on the causes of postpartum hemorrhage. Which condition would the nurse most likely find as the most common cause?",
+                options: [
+                    "labor augmentation",
+                    "uterine atony",
+                    "cervical or vaginal lacerations",
+                    "uterine inversion"
+                ],
+                correct: 1,
+                rationale: "The most common cause of postpartum hemorrhage is uterine atony, failure of the uterus to contract and retract after birth. The uterus must remain contracted after birth to control bleeding from the placental site. Labor augmentation is a risk factor for postpartum hemorrhage. Lacerations of the birth canal and uterine inversion may cause postpartum hemorrhage, but these are not the most common cause.",
+                image: 'uterine_atony',
+                hint: "This refers to the uterus failing to contract properly after delivery."
+            },
+            {
+                question: "A postpartum woman is diagnosed with endometritis. The nurse interprets this as an infection involving which area? Select all that apply.",
+                options: [
+                    "endometrium",
+                    "decidua",
+                    "myometrium",
+                    "broad ligament",
+                    "ovaries",
+                    "fallopian tubes"
+                ],
+                correct: 0,
+                rationale: "Endometritis is an infectious condition that involves the endometrium, decidua, and adjacent myometrium of the uterus. Extension of endometritis can result in parametritis, which involves the broad ligament and possibly the ovaries and fallopian tubes, or septic pelvic thrombophlebitis.",
+                image: 'endometritis',
+                hint: "This infection involves the uterine lining and muscle layers."
+            },
+            {
+                question: "A group of nurses are reviewing information about mastitis and its causes in an effort to develop a teaching program on prevention for postpartum women. The nurses demonstrate understanding of the information when they focus the teaching on ways to minimize risk of exposure to which organism?",
+                options: [
+                    "E. coli",
+                    "S. aureus",
+                    "Proteus",
+                    "Klebsiella"
+                ],
+                correct: 1,
+                rationale: "The most common infectious organism that causes mastitis is S. aureus, which comes from the breast-feeding infant's mouth or throat. E. coli is another, less common cause. E. coli, Proteus, and Klebsiella are common causes of urinary tract infections.",
+                image: 'staphylococcus',
+                hint: "This common bacterium is often found on skin and in nasal passages."
+            },
+            {
+                question: "A home health care nurse is assessing a postpartum woman who was discharged 2 days ago. The woman tells the nurse that she has a low-grade fever and feels \"lousy.\" Which finding would lead the nurse to suspect endometritis? Select all that apply.",
+                options: [
+                    "lower abdominal tenderness",
+                    "urgency",
+                    "flank pain",
+                    "breast tenderness",
+                    "anorexia"
+                ],
+                correct: 0,
+                rationale: "Manifestations of endometritis include lower abdominal tenderness or pain on one or both sides, elevated temperature, foul-smelling lochia, anorexia, nausea, fatigue and lethargy, leukocytosis, and elevated sedimentation rate. Urgency and flank pain would suggest a urinary tract infection. Breast tenderness may be related to engorgement or suggest mastitis.",
+                image: 'endometritis',
+                hint: "Look for uterine-related symptoms with systemic signs of infection."
+            },
+            {
+                question: "A postpartum client comes to the clinic for her routine 6-week visit. The nurse assesses the client and suspects that she is experiencing subinvolution based on which finding?",
+                options: [
+                    "nonpalpable fundus",
+                    "moderate lochia serosa",
+                    "bruising on arms and legs",
+                    "fever"
+                ],
+                correct: 1,
+                rationale: "Subinvolution is usually identified at the woman's postpartum examination 4 to 6 weeks after birth. The clinical picture includes a postpartum fundal height that is higher than expected, with a boggy uterus; the lochia fails to change colors from red to serosa to alba within a few weeks. Normally, at 4 to 6 weeks, lochia alba or no lochia would be present and the fundus would not be palpable. Thus evidence of lochia serosa suggests subinvolution. Bruising would suggest a coagulopathy. Fever would suggest an infection.",
+                image: 'subinvolution',
+                hint: "This finding suggests the uterus is not returning to its pre-pregnant state properly."
+            },
+            {
+                question: "Assessment of a postpartum client reveals a firm uterus with bright-red bleeding and a localized bluish bulging area just under the skin at the perineum. The woman also reports significant pelvic pain and is experiencing problems with voiding. The nurse suspects which condition?",
+                options: [
+                    "hematoma",
+                    "laceration",
+                    "bladder distention",
+                    "uterine atony"
+                ],
+                correct: 0,
+                rationale: "The woman most likely has a hematoma based on the findings: firm uterus with bright-red bleeding; localized bluish bulging area just under the skin surface in the perineal area; severe perineal or pelvic pain; and difficulty voiding. A laceration would involve a firm uterus with a steady stream or trickle of unclotted bright-red blood in the perineum. Bladder distention would be palpable along with a soft, boggy uterus that deviates from the midline. Uterine atony would be noted by a uncontracted uterus.",
+                image: 'hematoma',
+                hint: "Look for signs of blood collection in soft tissues."
+            },
+            {
+                question: "A postpartum woman is prescribed oxytocin to stimulate the uterus to contract. Which action would be most important for the nurse to do?",
+                options: [
+                    "Administer the drug as an IV bolus injection.",
+                    "Give as a vaginal or rectal suppository.",
+                    "Piggyback the IV infusion into a primary line.",
+                    "Withhold the drug if the woman is hypertensive."
+                ],
+                correct: 2,
+                rationale: "When giving oxytocin, it should be diluted in a liter of IV solution and the infusion set up to be piggy-backed into a primary line to ensure that the medication can be discontinued readily if hyperstimulation or adverse effects occur. It should never be given as an IV bolus injection. Oxytocin may be given if the woman is hypertensive. Oxytocin is not available as a vaginal or rectal suppository.",
+                image: 'oxytocin_administration',
+                hint: "This allows for quick discontinuation if adverse effects occur."
+            },
+            {
+                question: "Assessment of a postpartum woman experiencing postpartum hemorrhage reveals mild shock. Which finding would the nurse expect to assess? Select all that apply.",
+                options: [
+                    "diaphoresis",
+                    "tachycardia",
+                    "oliguria",
+                    "cool extremities",
+                    "confusion"
+                ],
+                correct: 0,
+                rationale: "Signs and symptoms of mild shock include diaphoresis, increased capillary refill, cool extremities, and maternal anxiety. Tachycardia and oliguria suggest moderate shock. Confusion suggests severe shock.",
+                image: 'shock_signs',
+                hint: "These are early compensatory signs of shock."
+            },
+            {
+                question: "A nurse is providing a refresher class for a group of postpartum nurses. The nurse reviews the risk factors associated with postpartum hemorrhage. The group demonstrates understanding of the information when they identify which risk factors associated with uterine tone? Select all that apply.",
+                options: [
+                    "rapid labor",
+                    "retained blood clots",
+                    "hydramnios",
+                    "operative birth",
+                    "fetal malpostion"
+                ],
+                correct: 0,
+                rationale: "Risk factors associated with uterine tone include hydramnios, rapid or prolonged labor, oxytocin use, maternal fever, or prolonged rupture of membranes. Retained blood clots are a risk factor associated with tissue retained in the uterus. Fetal malposition and operative birth are risk factors associated with trauma of the genital tract.",
+                image: 'risk_factors',
+                hint: "These factors affect the uterus's ability to contract effectively."
+            },
+            {
+                question: "A nurse is massaging a postpartum client's fundus and places the nondominant hand on the area above the symphysis pubis based on the understanding that this action:",
+                options: [
+                    "determines that the procedure is effective.",
+                    "helps support the lower uterine segment.",
+                    "aids in expressing accumulated clots.",
+                    "prevents uterine muscle fatigue."
+                ],
+                correct: 1,
+                rationale: "The nurse places the nondominant hand on the area above the symphysis pubis to help support the lower uterine segment. The hand, usually the dominant hand that is placed on the fundus, helps to determine uterine firmness (and thus the effectiveness of the massage). Applying gentle downward pressure on the fundus helps to express clots. Overmassaging the uterus leads to muscle fatigue.",
+                image: 'fundal_support',
+                hint: "This technique prevents uterine inversion during massage."
+            },
+            {
+                question: "A nurse is developing a plan of care for a woman who is at risk for thromboembolism. Which measure would the nurse include as the most cost-effective method for prevention?",
+                options: [
+                    "prophylactic heparin administration",
+                    "compression stockings",
+                    "early ambulation",
+                    "warm compresses"
+                ],
+                correct: 2,
+                rationale: "Although compression stockings and prophylactic heparin administration may be appropriate, the most cost-effective preventive method is early ambulation. It is also the easiest method. Warm compresses are used to treat superficial venous thrombosis.",
+                image: 'early_ambulation',
+                hint: "This simple intervention promotes circulation."
+            },
+            {
+                question: "A postpartum woman who developed deep vein thrombosis is being discharged on anticoagulant therapy. After teaching the woman about this treatment, the nurse determines that additional teaching is needed when the woman makes which statement?",
+                options: [
+                    "\"I will use a soft toothbrush to brush my teeth.\"",
+                    "\"I can take ibuprofen if I have any pain.\"",
+                    "\"I need to avoid drinking any alcohol.\"",
+                    "\"I will call my health care provider if my stools are black and tarry.\""
+                ],
+                correct: 1,
+                rationale: "Individuals receiving anticoagulant therapy need to avoid use of any over-the-counter products containing aspirin or aspirin-like derivatives such as NSAIDs (ibuprofen) to reduce the risk for bleeding. Using a soft toothbrush and avoiding alcohol are appropriate measures to reduce the risk for bleeding. Black, tarry stools should be reported to the health care provider.",
+                image: 'anticoagulant_teaching',
+                hint: "NSAIDs can increase bleeding risk with anticoagulants."
+            },
+            {
+                question: "The nurse is developing a discharge teaching plan for a postpartum woman who has developed a postpartum infection. Which measures would the nurse most likely include in this teaching plan? Select all that apply.",
+                options: [
+                    "taking the prescribed antibiotic until it is finished",
+                    "checking temperature once a week",
+                    "washing hands before and after perineal care",
+                    "handling perineal pads by the edges",
+                    "directing peribottle to flow from back to front"
+                ],
+                correct: 0,
+                rationale: "Teaching should address taking the prescribed antibiotic until finished to ensure complete eradication of the infection; checking temperature daily and notifying the practitioner if it is above 100.4° F (38° C); washing hands thoroughly before and after eating, using the bathroom, touching the perineal area, or providing newborn care; handling perineal pads by the edges and avoiding touching the inner aspect of the pad that is against the body; and directing peribottle so that it flows from front to back.",
+                image: 'infection_prevention',
+                hint: "Focus on complete antibiotic course and proper hygiene."
+            },
+            {
+                question: "A nurse is assessing a postpartum client who is at home. Which statement by the client would lead the nurse to suspect that the client may be developing postpartum depression?",
+                options: [
+                    "\"I just feel so overwhelmed and tired.\"",
+                    "\"I'm feeling so guilty and worthless lately.\"",
+                    "\"It's strange, one minute I'm happy, the next I'm sad.\"",
+                    "\"I keep hearing voices telling me to take my baby to the river.\""
+                ],
+                correct: 1,
+                rationale: "Indicators for postpartum depression include feelings related to restlessness, worthlessness, guilt, hopeless, and sadness along with loss of enjoyment, low energy level, and loss of libido. The statements about being overwhelmed and fatigued and changing moods suggest postpartum blues. The statement about hearing voices suggests postpartum psychosis.",
+                image: 'postpartum_depression',
+                hint: "Look for persistent negative self-perception and mood."
+            },
+            {
+                question: "As part of an in-service program to a group of home health care nurses who care for postpartum women, a nurse is describing postpartum depression. The nurse determines that the teaching was successful when the group identifies that this condition becomes evident at which time after birth of the newborn?",
+                options: [
+                    "in the first week",
+                    "within the first 2 weeks",
+                    "in approximately 1 month",
+                    "within the first 6 weeks"
+                ],
+                correct: 3,
+                rationale: "PPD usually has a gradual onset and becomes evident within the first 6 weeks postpartum. Postpartum blues typically manifests in the first week postpartum. Postpartum psychosis usually appears about 3 months after birth of the newborn.",
+                image: 'depression_timing',
+                hint: "This condition develops more gradually than postpartum blues."
+            },
+            {
+                question: "A nurse suspects that a client may be developing disseminated intravascular coagulation. The woman has a history of placental abruption (abruptio placentae) during birth. Which finding would help to support the nurse's suspicion?",
+                options: [
+                    "severe uterine pain",
+                    "board-like abdomen",
+                    "appearance of petechiae",
+                    "inversion of the uterus"
+                ],
+                correct: 2,
+                rationale: "A complication of abruptio placentae is disseminated intravascular coagulation (DIC), which is manifested by petechiae, ecchymoses, and other signs of impaired clotting. Severe uterine pain, a board-like abdomen, and uterine inversion are not associated with DIC and placental abruption.",
+                image: 'disseminated_intravascular',
+                hint: "Look for signs of abnormal bleeding and clotting."
+            },
+            {
+                question: "On a follow-up visit to the clinic, a nurse suspects that a postpartum client is experiencing postpartum psychosis. Which finding would most likely lead the nurse to suspect this condition?",
+                options: [
+                    "delusional beliefs",
+                    "feelings of anxiety",
+                    "sadness",
+                    "insomnia"
+                ],
+                correct: 0,
+                rationale: "Postpartum psychosis is at the severe end of the continuum of postpartum emotional disorders. It is manifested by depression that escalates to delirium, hallucinations, delusional beliefs, anger toward self and infant, bizarre behavior, mania, and thoughts of hurting herself and the infant. Feelings of anxiety, sadness, and insomnia are associated with postpartum depression.",
+                image: 'delusional_beliefs',
+                hint: "This represents the most severe disturbance in reality testing."
+            },
+            {
+                question: "A nurse is assessing a client who gave birth vaginally about 4 hours ago. The client tells the nurse that she changed her perineal pad about an hour ago. On inspection, the nurse notes that the pad is now saturated. The uterus is firm and approximately at the level of the umbilicus. Further inspection of the perineum reveals an area, bluish in color and bulging just under the skin surface. Which action would the nurse do next?",
+                options: [
+                    "Apply warm soaks to the area.",
+                    "Notify the health care provider.",
+                    "Massage the uterine fundus.",
+                    "Encourage the client to void."
+                ],
+                correct: 1,
+                rationale: "The client is experiencing postpartum hemorrhage secondary to a perineal hematoma. The nurse needs to notify the health care provider about these findings to prevent further hemorrhage. Applying warm soaks to the area would do nothing to control the bleeding. With a perineal hematoma, the uterus is firm, so massaging the uterus or encouraging the client to void would not be appropriate.",
+                image: 'perineal_hematoma',
+                hint: "This requires immediate medical intervention."
+            },
+            {
+                question: "A nurse is providing education to a woman who is experiencing postpartum hemorrhage and is to receive a uterotonic agent. The nurse determines that additional teaching is needed when the woman identifies which drug as possibly being prescribed as treatment?",
+                options: [
+                    "oxytocin",
+                    "methylergonovine",
+                    "carboprost",
+                    "magnesium sulfate"
+                ],
+                correct: 3,
+                rationale: "Magnesium sulfate is during labor as a tocolytic agent to slow or halt preterm labor. It is not be used to treat postpartum hemorrhage. Oxytocin, methylergonovine, and carboprost are drugs used to manage postpartum hemorrhage.",
+                image: 'uterotonic_agents',
+                hint: "This medication is used to stop preterm labor, not control bleeding."
+            }
+        ];
+
+        let currentQuestion = 0;
+        let selectedOption = null;
+        let score = 0;
+        let answers = Array(questions.length).fill(null);
+
+        function loadQuestion() {
+            const question = questions[currentQuestion];
+            document.getElementById('question').textContent = question.question;
+            document.getElementById('counter').textContent = `${currentQuestion + 1}/${questions.length}`;
+            
+            // Update progress bar
+            const progress = ((currentQuestion + 1) / questions.length) * 100;
+            document.getElementById('progressBar').style.width = `${progress}%`;
+            
+            // Load image
+            const imageContainer = document.getElementById('imageContainer');
+            const conceptImage = document.getElementById('conceptImage');
+            if (question.image && medicalImages[question.image]) {
+                conceptImage.src = medicalImages[question.image];
+                imageContainer.style.display = 'flex';
+            } else {
+                imageContainer.style.display = 'none';
+            }
+            
+            // Load options
+            const optionsContainer = document.getElementById('options');
+            optionsContainer.innerHTML = '';
+            
+            question.options.forEach((option, index) => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'option';
+                optionElement.innerHTML = `
+                    <div class="option-letter">${String.fromCharCode(65 + index)}</div>
+                    <div class="option-text">${option}</div>
+                `;
+                optionElement.onclick = () => selectOption(index);
+                optionsContainer.appendChild(optionElement);
+            });
+            
+            // Reset feedback and rationale
+            document.getElementById('feedback').className = 'feedback';
+            document.getElementById('feedback').style.display = 'none';
+            document.getElementById('rationale').className = 'rationale';
+            document.getElementById('hint').className = 'hint';
+            
+            // Update navigation buttons
+            document.getElementById('prevBtn').disabled = currentQuestion === 0;
+            document.getElementById('nextBtn').textContent = currentQuestion === questions.length - 1 ? 'Finish ➡️' : 'Next ➡️';
+            document.getElementById('nextBtn').disabled = answers[currentQuestion] === null;
+            
+            // Reset cancel button visibility
+            document.getElementById('cancelBtn').classList.remove('show');
+            
+            // If this question was already answered, show the answer
+            if (answers[currentQuestion] !== null) {
+                selectOption(answers[currentQuestion], true);
+            }
+        }
+
+        function selectOption(index, fromMemory = false) {
+            // If we're just loading a previously selected answer, don't process it as new
+            if (fromMemory) {
+                highlightSelectedOption(index);
+                showFeedback(index);
+                return;
+            }
+            
+            // If an option is already selected, do nothing (unless we're loading from memory)
+            if (selectedOption !== null && !fromMemory) return;
+            
+            selectedOption = index;
+            answers[currentQuestion] = index;
+            
+            highlightSelectedOption(index);
+            showFeedback(index);
+            
+            // Enable next button
+            document.getElementById('nextBtn').disabled = false;
+        }
+
+        function cancelSelection() {
+            // Reset the selected option
+            selectedOption = null;
+            answers[currentQuestion] = null;
+            
+            // Remove highlighting from all options
+            const options = document.querySelectorAll('.option');
+            options.forEach(option => {
+                option.classList.remove('correct', 'incorrect', 'selected');
+            });
+            
+            // Hide feedback and rationale
+            document.getElementById('feedback').style.display = 'none';
+            document.getElementById('rationale').classList.remove('show');
+            
+            // Hide the cancel button
+            document.getElementById('cancelBtn').classList.remove('show');
+            
+            // Disable next button until a new selection is made
+            document.getElementById('nextBtn').disabled = true;
+        }
+
+        function highlightSelectedOption(index) {
+            const options = document.querySelectorAll('.option');
+            const question = questions[currentQuestion];
+            
+            options.forEach((option, i) => {
+                option.classList.remove('correct', 'incorrect', 'selected');
+                
+                if (i === index) {
+                    option.classList.add('selected');
+                    
+                    if (i === question.correct) {
+                        option.classList.add('correct');
+                        if (!answers[currentQuestion]) score++;
+                        
+                        // Don't show cancel button for correct answers
+                        document.getElementById('cancelBtn').classList.remove('show');
+                    } else {
+                        option.classList.add('incorrect');
+                        // Also highlight the correct answer
+                        options[question.correct].classList.add('correct');
+                        
+                        // Show cancel button only for wrong answers
+                        document.getElementById('cancelBtn').classList.add('show');
+                    }
+                }
+            });
+        }
+
+        function showFeedback(index) {
+            const question = questions[currentQuestion];
+            const feedback = document.getElementById('feedback');
+            const feedbackIcon = document.getElementById('feedbackIcon');
+            const feedbackText = document.getElementById('feedbackText');
+            const rationale = document.getElementById('rationale');
+            const rationaleText = document.getElementById('rationaleText');
+            
+            if (index === question.correct) {
+                feedback.className = 'feedback correct';
+                feedbackIcon.textContent = '✅';
+                feedbackText.textContent = 'Correct! Well done.';
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedbackIcon.textContent = '❌';
+                feedbackText.textContent = `Incorrect. The right answer is: ${String.fromCharCode(65 + question.correct)}`;
+            }
+            
+            feedback.style.display = 'flex';
+            rationaleText.textContent = question.rationale;
+            rationale.classList.add('show');
+        }
+
+        function showHint() {
+            const hint = document.getElementById('hint');
+            const hintText = document.getElementById('hintText');
+            const question = questions[currentQuestion];
+            
+            hintText.textContent = question.hint;
+            hint.classList.add('show');
+        }
+
+        function nextCard() {
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                selectedOption = null;
+                loadQuestion();
+            } else {
+                // Quiz finished - show results
+                alert(`Quiz completed! Your score: ${score}/${questions.length}`);
+                currentQuestion = 0;
+                selectedOption = null;
+                score = 0;
+                answers = Array(questions.length).fill(null);
+                loadQuestion();
+            }
+        }
+
+        function previousCard() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                selectedOption = answers[currentQuestion];
+                loadQuestion();
+            }
+        }
+
+        // Initialize the app
+        loadQuestion();
+    </script>
+</body>
+</html>
